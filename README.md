@@ -13,6 +13,6 @@ It should be OK to launch the program with an instance of bitmonerod, simplewall
 You can pass your wallet filename and password as arguments on the commandline, if you're launching from the command line, however this is currently not done in the most robust way possible, so make sure you just pass two arguments, the first being wallet name and second password, or the program will probably fail to start. I'm looking to make this more robust using argparse rather than argv.
 
 ## Future Work
-There are several features I'd like to implement, the most important of which is probably tab or file keeping a record of all incoming and outgoing transactions. This is a really key feature that should probably be a part of any wallet, but I'm still having some trouble with incoming transactions, so it is delayed for the time being. 
+There are several features I'd like to implement, the most important of which is probably a table or file keeping a record of all incoming and outgoing transactions. This is a really key feature that should probably be a part of any wallet, but I'm still having some trouble with incoming transactions, so it is delayed for the time being. 
 
 Another thing I want to change is using argparse rather than argv to parse command line arguments. This should make the program more robust (less crashy) and offer the user additional help at the command line. I probably want to clean up the interface and prettify it a bit more too. I'm open to suggestions too, so please open an issue or email me if you have any ideas, complaints, etc.
