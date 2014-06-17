@@ -1,4 +1,4 @@
-# Cryptonote RPC wallet Kivy GUI
+# Cryptonote RPC wallet GUI
 This is a GUI frontend that runs on top of bitmonerod, simplewallet (in RPC mode), and optionally LucasJones or Wolf's cryptonight cpuminer. **This program is an alpha version, and although I don't think there is really any way to screw up your wallet, please exercise some modicum of caution (i.e. backup your wallet key file(s)).**
 
 ## Installation
