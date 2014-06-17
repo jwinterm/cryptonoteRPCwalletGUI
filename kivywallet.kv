@@ -1,7 +1,11 @@
 #:kivy 1.8.0
 
 <RootWidget>:
-    cols: 1
+    id: rootwidget
+    daemonchecker_label: daemonchecker_label
+    daemoninfo_label: daemoninfo_label
+    namechecker_label: namechecker_label
+    walletchecker_label: walletchecker_label
     input_name: name_input
     input_pw: pw_input
     label_myaddress: myaddress_label
@@ -11,179 +15,257 @@
     input_amount: amount_input
     input_mixin: mixin_input
     input_paymentid: paymentid_input
+    minerurl_input: minerurl_input
+    mineruser_input: mineruser_input
+    minerpw_input: minerpw_input
+    minerthreads_input: minerthreads_input
 
-    BoxLayout:
-        size_hint_y: 0.4
-        Label:
-            text: "[b]Kivy Monero/Cryptonote GUI RPC Wallet[/b]"
-            markup: True
-            font_size: 20
+    AccordionItem:
+        title: "Start mining"
+        BoxLayout:
+            padding: 50,50,50,50
+            orientation: 'vertical'
+            Label:
+                text: "You must have cpuminer-multi binary in the local directory to use this panel."
+            Label:
+                text: "Mining pool address and port\n(e.g. stratum+tcp://pool.moonero.com:1234)"
+            TextInput:
+                id: minerurl_input
+                size_hint_x: 0.7
+            Label:
+                text: "Username/address\n(typically your XMR address)"
+            TextInput:
+                id: mineruser_input
+                font_size: 8
+                size_hint_x: 1.7
+            Label:
+                text: "Password\n(typically 'x' or blank)"
+            TextInput:
+                id: minerpw_input
+                size_hint_x: 0.7
+            Label:
+                text: "Number of threads\n(leave blank for max)"
+            TextInput:
+                id: minerthreads_input
+                size_hint_x: 0.4
+            Button:
+                text: "Launch cpuminer"
+                on_press: root.launchminer()
+                font_size: 20
 
-    BoxLayout:
-        size_hint_y: 0.1
+    AccordionItem:
+        title: "Transfer funds"
+        BoxLayout:
+            padding: 50,50,50,50
+            orientation: 'vertical'
+            Label:
+                text: "Send to address:"
+                size_hint_x: 0.2
+            TextInput:
+                id: address_input
+                size_hint_x: 2
+                font_size: 10
+                multiline: False
+            Label:
+                text: "Amount MRO:"
+                size_hint_x: 0.2
+            TextInput:
+                id: amount_input
+                size_hint_x: 0.8
+                font_size: 10
+                multiline: False
+            Label:
+                text: "Mixin amount:"
+                size_hint_x: 0.2
+            TextInput:
+                id: mixin_input
+                size_hint_x: 0.8
+                font_size: 10
+                multiline: False
+            Label:
+                text: "Payment ID:"
+                size_hint_x: 0.2
+            TextInput:
+                id: paymentid_input
+                size_hint_x: 1
+                font_size: 10
+                text: ""
+                multiline: False
+            Button:
+                text: "Transfer funds"
+                on_press: root.transferfunds()
+                on_press: root.storeformdata()
+                font_size: 20
 
+    AccordionItem:
+        title: "Initialize wallet file in simplewallet"
+        BoxLayout:
+            padding: 50,50,50,50
+            orientation: 'vertical'
+            Label:
+                id: walletchecker_label
+                size_hint_y: 0.5
+                text: ""
+                markup: True
+                font_size: 16
+            Button:
+                text: "Initialize wallet file"
+                on_press: root.launchwallet()
+                on_press: root.storeformdata()
+                font_size: 20
+            Label:
+                id: namechecker_label
+                text: ""
+                markup: True
+                font_size: 16
+            BoxLayout:
+                orientation: 'horizontal'
+                Label:
+                    text: "Wallet name: "
+                    size_hint_x: 0.3
+                    font_size: 16
+                TextInput:
+                    id: name_input
+                    size_hint_x: 0.7
+                    font_size: 12
+                    text: root.walletname
+            BoxLayout:
+                orientation: 'horizontal'
+                Label:
+                    text: "Wallet password: "
+                    size_hint_x: 0.3
+                    font_size: 16
+                TextInput:
+                    id: pw_input
+                    size_hint_x: 0.7
+                    font_size: 12
+                    text: root.walletpw
+                    password: True
+            Label:
+                text: "Wallet address: \n [size=10](click address to copy)[/size]"
+                markup: True
+                font_size: 16
+                halign: 'center'
+            Label:
+                id: myaddress_label
+                text: "[ref=addressselection]uninitialized[/ref]"
+                markup: True
+                font_size: 10
+                on_ref_press: root.selectaddress()
+            BoxLayout:
+                orientation: 'horizontal'
+                Label:
+                    text: "Balance: "
+                    size_hint_x: 0.3
+                    font_size: 16
+                Label:
+                    id: balance_label
+                    text: root.balance
+                    size_hint_x: 0.7
+                    markup: True
+                    font_size: 16
+            BoxLayout:
+                orientation: 'horizontal'
+                Label:
+                    text: "Unlocked balance: "
+                    size_hint_x: 0.3
+                    font_size: 16
+                Label:
+                    id: unlockedbalance_label
+                    text: root.unlockedbalance
+                    size_hint_x: 0.7
+                    markup: True
+                    font_size: 16
+            Button:
+                text: "Save wallet data\n(for faster loading next time)."
+                on_press: root.savewallet()
+                font_size: 16
+
+    AccordionItem:
+        title: "Launch bitmonerod daemon"
+        BoxLayout:
+            padding: 50,50,50,50
+            orientation: 'vertical'
+            Image:
+                source: 'logo.png'
+            Label:
+                markup: True
+                font_size: 24
+                text: "[b]Kivy[/b] Wallet GUI"
+            Label:
+                id: daemonchecker_label
+                text: ""
+                markup: True
+                font_size: 18
+            Button:
+                size_hint_y: 1.2
+                text: "Start network daemon"
+                font_size: 20
+                on_press: root.launchdaemon()
+            Label:
+                size_hint_y: 2.5
+                id: daemoninfo_label
+                markup: True
+                font_size: 16
+                text: "Daemon block goes here..."
+                halign: 'left'
+            Button:
+                text: "Save blockchain info\n(for faster syncing next time)."
+                on_press: root.save_bc()
+                font_size: 16
+            Button:
+                text: "Store form data/user input\n(for lesser typing next time)."
+                on_press: root.storeformdata()
+                font_size: 16
+
+
+<SaveBCPopup>
+    size_hint: 0.75, 0.75
+    auto_dismiss: False
+    title: "Save Blockchain Popup"
     BoxLayout:
-        size_hint_y: 0.35
-        Label:
+        orientation: 'horizontal'
         Button:
-            size_hint_x: 1.7
-            text: "Launch bitmonerod daemon"
-            on_press: root.launchdaemon()
-        Label:
+            text: "This may take a minute or three.\nPlease be patient...\nclick to close and save blockchain!"
+            on_press: root.really_save_bc()
+            on_press: root.dismiss()
         Button:
-            size_hint_x: 1.7
-            text: "Launch simplewallet daemon"
-            on_press: root.launchwallet()
-        Label:
+            text: "Click to close without saving and cancel."
+            on_press: root.dismiss()
 
+<TransferPopup>
+    popup_label: popup_label
+    size_hint: 0.75, 0.75
+    auto_dismiss: False
+    title: "Transfer Popup"
     BoxLayout:
-        size_hint_y: 0.2
-
-    BoxLayout:
-        padding: 10,0,40,0
-        size_hint_y: 0.3
+        orientation: 'vertical'
         Label:
-            text: "Wallet name: "
-            size_hint_x: 0.2
-            font_size: 16
-        TextInput:
-            id: name_input
-            size_hint_x: 0.8
-            font_size: 12
-            text: root.walletname
-
-    BoxLayout:
-        padding: 10,0,40,0
-        size_hint_y: 0.3
-        Label:
-            text: "Wallet password: "
-            size_hint_x: 0.2
-            font_size: 16
-        TextInput:
-            id: pw_input
-            size_hint_x: 0.8
-            font_size: 12
-            text: root.walletpw
-            password: True
-
-    BoxLayout:
-        size_hint_y: 0.5
-        padding: 10,0,80,0
-        Label:
-            text: "Wallet address: \n [size=10](click address to copy)[/size]"
+            # text: "are you sure?"
+            id: popup_label
+            text: ""
             markup: True
-            size_hint_x: 0.3
-            font_size: 16
-            halign: 'center'
-        Label:
-            id: myaddress_label
-            text: "[ref=addressselection]uninitialized[/ref]"
-            markup: True
-            size_hint_x: 0.7
-            font_size: 10
-            on_ref_press: root.selectaddress()
+        BoxLayout:
+            orientation: 'horizontal'
+            Button:
+                text: "Yes, transfer XMR."
+                on_press: root.transfer()
+                on_press: root.dismiss()
+            Button:
+                text: "No, cancel transaction."
+                on_press: root.dismiss()
 
+<TxIDPopup>
+    title: "Tx ID Popup"
+    txid_label: txid_label
     BoxLayout:
-        size_hint_y: 0.3
+        orientation: 'vertical'
         Label:
-            text: "Balance: "
-            size_hint_x: 0.3
-            font_size: 16
-
-        Label:
-            id: balance_label
-            text: root.balance
-            size_hint_x: 0.7
+            font_size: 11
             markup: True
-            font_size: 16
-
-    BoxLayout:
-        size_hint_y: 0.3
-        Label:
-            text: "Unlocked balance: "
-            size_hint_x: 0.3
-            font_size: 16
-        Label:
-            id: unlockedbalance_label
-            text: root.unlockedbalance
-            size_hint_x: 0.7
-            markup: True
-            font_size: 16
-
-    BoxLayout:
-        size_hint_y: 0.35
-        Label:
+            id: txid_label
+            text: ""
+            on_ref_press: root.selecttxid()
         Button:
-            text: "Refresh balance"
-            on_press: root.checkbalance()
-            font_size: 20
-        Label:
-
-
-    BoxLayout:
-        size_hint_y: 0.2
-
-
-    BoxLayout:
-        padding: 10,0,40,0
-        size_hint_y: 0.3
-        Label:
-            text: "Send to address:"
-            size_hint_x: 0.2
-        TextInput:
-            id: address_input
-            size_hint_x: 0.8
-            font_size: 10
-            multiline: False
-
-
-    BoxLayout:
-        padding: 10,0,40,0
-        size_hint_y: 0.3
-        Label:
-            text: "Amount MRO:"
-            size_hint_x: 0.2
-        TextInput:
-            id: amount_input
-            size_hint_x: 0.8
-            font_size: 10
-            multiline: False
-
-
-    BoxLayout:
-        padding: 10,0,40,0
-        size_hint_y: 0.3
-        Label:
-            text: "Mixin amount:"
-            size_hint_x: 0.2
-        TextInput:
-            id: mixin_input
-            size_hint_x: 0.8
-            font_size: 10
-            multiline: False
-
-
-    BoxLayout:
-        padding: 10,0,40,0
-        size_hint_y: 0.3
-        Label:
-            text: "Payment ID:"
-            size_hint_x: 0.2
-        TextInput:
-            id: paymentid_input
-            size_hint_x: 0.8
-            font_size: 10
-            text: "DISABLED!!! Do not send funds to exchanges. Disabled payment id field is required for depositing on exchanges!"
-            multiline: False
-
-
-    BoxLayout:
-        padding: 200,0,200,0
-        size_hint_y: 0.35
-        Button:
-            text: "Transfer funds"
-            on_press: root.transferfunds()
-            font_size: 20
-
-    BoxLayout:
-        size_hint_y: 0.1
+            text: "OK, dismiss."
+            on_press: root.dismiss()
