@@ -1,5 +1,5 @@
 # Cryptonote RPC wallet Kivy GUI
-This is a GUI frontend that runs on top of bitmonerod, simplewallet (in RPC mode), and optionally LucasJones or Wolf's cryptonight cpuminer. **This program is an early beta version, and although I don't think there is really any way to screw up your wallet, please exercise some modicum of caution.**
+This is a GUI frontend that runs on top of bitmonerod, simplewallet (in RPC mode), and optionally LucasJones or Wolf's cryptonight cpuminer. **This program is an early beta version, and although I don't think there is really any way to screw up your wallet, please exercise some modicum of caution (i.e. backup your wallet key file(s)).**
 
 ## Installation
 ### Windows, Linux, and Mac
@@ -11,6 +11,8 @@ Currently there are no binaries available. I'm in the process of trying to compi
 It should be OK to launch the program with an instance of bitmonerod, simplewallet, or minerd running, but the program won't allow you to launch another instance of these programs if it detects they are already running. So, unless you know that you are running bitmonerod and simplewallet in RPC mode, it's probably best to just launch them from within the GUI program. If you close just the GUI though, it should be fine to relaunch when one or all of the binaries are already running.
 
 You can pass your wallet filename and password as arguments on the commandline, if you're launching from the command line, however this is currently not done in the most robust way possible, so make sure you just pass two arguments, the first being wallet name and second password, or the program will probably fail to start. I'm looking to make this more robust using argparse rather than argv.
+
+One known issue is that a wallet created on Windows won't/may not work directly on a Linux machine. A workaround is to delete the wallet bin file, but keep the keys file; simplewallet will rebuild the bin file on Linux and the wallet should work.
 
 ## Future Work
 There are several features I'd like to implement, the most important of which is probably a table or file keeping a record of all incoming and outgoing transactions. This is a really key feature that should probably be a part of any wallet, but I'm still having some trouble with incoming transactions, so it is delayed for the time being. 
